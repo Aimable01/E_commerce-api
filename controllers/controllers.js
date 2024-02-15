@@ -61,7 +61,7 @@ const authLogin = async (req, res) => {
 };
 //-----------------------------------------END USER REGISTRATION AND LOGIN----------------------------------
 
-//------------------CRUD FOR THE PRODUCTS--------------------------------------
+//------------------------------------CRUD FOR THE PRODUCTS-------------------------------------------------
 //create product
 const createProduct = async (req, res) => {
   const { name, description, price, quantity } = req.body;
@@ -73,10 +73,67 @@ const createProduct = async (req, res) => {
     res.status(404).json({ message: error });
   }
 };
+
+//get all products
+const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.status(200).json({ message: "All products", products });
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+};
+
+//get a single product
+const getProduct = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const product = await Product.findById(id);
+    if (!product) return res.status(400).json({ message: "No product found" });
+    res.status(200).json({ message: "product found", product });
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+};
+
+//update a product
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) return res.status(404).json({ message: "No product found" });
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.status(200).json({ message: "Updated product now", updatedProduct });
+  } catch (error) {
+    res
+      .status(404)
+      .json({ message: error, message: "Not sending update request" });
+  }
+};
+
+//delete a product
+const deleteProduct = async (req, res) => {
+  //const id = req.params.id;
+  try {
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    res.status(200).json({ message: "Product deleted now", product });
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+};
+//---------------------------------END CRUD FOR PRODUCTS------------------------------------------------
 //------------export the controllers
 module.exports = {
   authRegister,
   authLogin,
   authenticateToken,
   createProduct,
+  getAllProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
 };

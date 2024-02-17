@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 //----product
 const Product = require("../models/product-model");
 
+//cart
+const Cart = require("../models/cart-model");
+
 //------------------------USER REGISTRATION AND LOGIN-------------------------------------------------
 //-------User registration
 const authRegister = async (req, res) => {
@@ -116,7 +119,6 @@ const updateProduct = async (req, res) => {
 
 //delete a product
 const deleteProduct = async (req, res) => {
-  //const id = req.params.id;
   try {
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
